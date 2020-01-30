@@ -1,0 +1,14 @@
+{
+  "name": "api",
+  "version": "0.0.1",
+  "description": "Backend with Meteor.js",
+  "scripts": {
+    "start": "meteor"
+  },
+  "repository": "https://github.com/yoourlink/api.git",
+  "dependencies": {
+    "@babel/runtime": "^7.7.6",
+    "jquery": "^3.4.1",
+    "meteor-node-stubs": "^1.0.0"
+  }
+}
