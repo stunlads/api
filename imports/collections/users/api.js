@@ -1,5 +1,6 @@
 import Api from '../../utils/api';
 import Users from './users';
+import { Links } from '../links/links';
 
 const ERRORS = {
   email: {
@@ -20,7 +21,22 @@ Api.addCollection(Users, {
   routeOptions: {
     authRequired: true
   },
+
   endpoints: {
+    get: {
+      action() {
+        const { _id, username } = this.user;
+
+        return {
+          status: 'success',
+          data: {
+            _id,
+            username
+          }
+        };
+      }
+    },
+
     post: {
       authRequired: false,
       action() {
