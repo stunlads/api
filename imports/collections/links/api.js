@@ -1,4 +1,5 @@
 import Api from '../../utils/api';
+import { LinksPublicFragment } from './fragments';
 import { Links } from './links';
 
 Api.addCollection(Links, {
@@ -11,19 +12,14 @@ Api.addCollection(Links, {
   endpoints: {
     getAll: {
       action() {
-        const links = Links.createQuery({
+        const linksQuery = Links.createQuery({
           $filters: { createdBy: this.user._id },
-          $options: { sort: { sorting: 1 } },
-
-          // fields
-          title: 1,
-          url: 1,
-          sorting: 1
+          ...LinksPublicFragment
         });
 
         return {
           status: 'success',
-          data: links.fetch()
+          data: linksQuery.fetch()
         };
       }
     },
@@ -31,7 +27,7 @@ Api.addCollection(Links, {
     post: {
       action() {
         const body = this.bodyParams;
-        const links = Links.createQuery({
+        const linksQuery = Links.createQuery({
           $filters: { createdBy: this.user._id }
         });
 
@@ -40,7 +36,7 @@ Api.addCollection(Links, {
           ...body,
 
           // last index
-          sorting: -links.getCount(),
+          sorting: -linksQuery.getCount(),
 
           // user
           createdBy: this.user._id
@@ -58,19 +54,19 @@ Api.addCollection(Links, {
     put: {
       action() {
         const body = this.bodyParams;
-        const filter = {
+        const filters = {
           _id: this.urlParams.id,
           createdBy: this.user._id
         };
 
         // get link
-        const link = Links.findOne(filter);
+        const linkQuery = Links.createQuery({
+          $filters: filters
+        });
 
-        if (link) {
-
-          Links.update(filter, {
-            $set: body
-          });
+        if (linkQuery.fetchOne()) {
+          // update
+          Links.update(filters, { $set: body });
 
           return {
             status: 'success',
@@ -84,6 +80,38 @@ Api.addCollection(Links, {
             message: `${filter._id} link not found!`
           }
         };
+      }
+    },
+
+    delete: {
+      action() {
+        const { id } = this.urlParams;
+        const link = Links.createQuery({
+          $filters: {
+            _id: id,
+            createdBy: this.user._id
+          }
+        });
+
+        if (link.fetchOne()) {
+
+          // remove Link
+          Links.remove(id);
+
+          return {
+            status: 'success',
+            data: {
+              id
+            }
+          }
+        }
+
+        return {
+          status: 'error',
+          data: {
+            message: `${id} link not found!`
+          }
+        }
       }
     }
   }
