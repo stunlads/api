@@ -4,5 +4,6 @@ export const LinksPublicFragment = {
   // fields
   title: 1,
   url: 1,
-  sorting: 1
+  sorting: 1,
+  active: 1
 };
