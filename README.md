@@ -14,8 +14,8 @@ Prerequisites:
 Now just clone and start the app:
 
 ```sh
-git clone https://github.com/yoourlink/ui.git yoourlink-ui
-cd yoourlink-ui
+git clone https://github.com/yoourlink/api.git yoourlink-api
+cd yoourlink-api
 meteor npm install
 meteor
 ```
