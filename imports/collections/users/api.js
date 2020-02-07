@@ -17,7 +17,7 @@ const ERRORS = {
 };
 
 Api.addCollection(Users, {
-  excludedEndpoints: ['getAll', 'put', 'patch'],
+  excludedEndpoints: ['getAll', 'patch'],
   routeOptions: {
     authRequired: true
   },
@@ -25,13 +25,15 @@ Api.addCollection(Users, {
   endpoints: {
     get: {
       action() {
-        const { _id, username } = this.user;
+        const { user } = this;
 
         return {
           status: 'success',
           data: {
-            _id,
-            username
+            _id: user._id,
+            name: user.profile.name,
+            username: user.username,
+            email: user.email()
           }
         };
       }
@@ -65,6 +67,30 @@ Api.addCollection(Users, {
         };
       }
     },
+
+    put: {
+      action() {
+        const { name } = this.bodyParams;
+        
+        // Update User
+        // XXX: For now, only the name is updated.
+        Users.update(this.user._id, {
+          $set: {
+            profile: {
+              name
+            }
+          }
+        });
+
+        return {
+          status: 'success',
+          data: {
+            name
+          }
+        };
+      }
+    },
+
     delete: {
       roleRequired: 'admin'
     }
