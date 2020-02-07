@@ -57,7 +57,10 @@ Api.addCollection(Users, {
         }
 
         // Register User
-        const _id = Accounts.createUser(body);
+        const _id = Accounts.createUser({
+          ...body,
+          profile: {}
+        });
 
         return {
           status: 'success',
@@ -70,8 +73,8 @@ Api.addCollection(Users, {
 
     put: {
       action() {
-        const { name } = this.bodyParams;
-        
+        const { name } = this.bodyParams;
+
         // Update User
         // XXX: For now, only the name is updated.
         Users.update(this.user._id, {
